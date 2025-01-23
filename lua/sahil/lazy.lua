@@ -26,3 +26,4 @@ require("lazy").setup(
     }
   }
 )
+-- { import = "sahil.plugins.lsp"}
