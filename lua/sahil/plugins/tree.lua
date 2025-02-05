@@ -44,5 +44,9 @@ return {
         ignore = false,
       },
     })
+
+    -- set keymaps
+    local keymap = vim.keymap -- for conciseness
+
   end
 }
