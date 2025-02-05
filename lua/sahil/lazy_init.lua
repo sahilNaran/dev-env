@@ -5,13 +5,13 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", 
+    "--branch=stable",
     lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    spec = "sahil.plugins",
-    change_detection = { notify = false }
+  spec = "sahil.plugins",
+  change_detection = { notify = false }
 })
