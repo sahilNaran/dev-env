@@ -1,5 +1,3 @@
-vim.opt.autochdir = true
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 

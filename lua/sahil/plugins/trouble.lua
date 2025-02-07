@@ -12,4 +12,13 @@ return {
     { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Open trouble location list" },
     { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "Open todos in trouble" },
   },
+  config = function()
+    require("trouble").setup({
+      auto_preview = false,
+      auto_fold = true,
+      auto_close = true,
+      use_lsp_diagnostic_signs = true,
+    })
+    require("todo-comments").setup();
+  end,
 }
