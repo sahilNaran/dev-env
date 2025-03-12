@@ -44,3 +44,10 @@ vim.opt.splitbelow = true -- horizontal splits below
 
 -- Seperator
 vim.cmd([[highlight WinSeparator guifg=NONE guibg=NONE ctermfg=NONE ctermbg=NONE]])
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.cc" },
+  callback = function()
+    vim.bo.filetype = "cpp"
+  end,
+})
