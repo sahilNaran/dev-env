@@ -2,7 +2,7 @@ local M = {}
 
 M.active_ts_server = "ts_ls"
 
-M.tsgo_path = "/Users/naransahil/development/typescript-go/built/local/tsgo"
+M.tsgo_path = "tsgo"
 
 function M.use_tsgo()
   return M.active_ts_server == "tsgo"
