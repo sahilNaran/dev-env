@@ -49,3 +49,8 @@ vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev centered match" })             
 
 vim.keymap.set("n", "<leader>zm", ":ZenMode<CR>", { silent = true, desc = "Toggle Zen Mode" })    -- Toggle Zen Mode
 vim.keymap.set("n", "<leader>tt", ":ToggleTerm<CR>", { silent = true, desc = "Toggle terminal" }) -- Toggle terminal
+
+
+-- Toggle TS LSP server
+vim.keymap.set("n", "<leader>ts", ":ToggleTSServer<CR>",
+  { silent = true, desc = "Toggle between TypeScript LSP servers" })

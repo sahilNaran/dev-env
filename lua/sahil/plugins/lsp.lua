@@ -23,6 +23,9 @@ return {
       vim.lsp.protocol.make_client_capabilities(),
       cmp_lsp.default_capabilities())
 
+
+    local ts_toggle = require("sahil.lsp_toggle")
+
     -- LSP Keybindings
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -68,6 +71,10 @@ return {
       },
       handlers = {
         function(server_name) -- default handler (optional)
+          if server_name == "tsserver" and ts_toggle.use_tsgo() then
+            vim.notify("Using tsgo LSP", vim.log.levels.INFO)
+            return
+          end
           require("lspconfig")[server_name].setup {
             capabilities = capabilities
           }
@@ -88,6 +95,27 @@ return {
         end,
       }
     })
+
+    if ts_toggle.use_tsgo() then
+      local lspconfig = require("lspconfig")
+      lspconfig.tsserver.setup {
+        cmd = { ts_toggle.tsgo_path, "lsp" },
+        capabilities = capabilities,
+        root_dir = lspconfig.util.root_pattern("tsconfig.json", "jsconfig.json", "package.json"),
+        init_options = {
+          preferences = {
+            disableSuggestions = false,
+          },
+        },
+      }
+    end
+
+    -- Add a command to toggle between TS LSP servers
+    vim.api.nvim_create_user_command("ToggleTSServer", function()
+      ts_toggle.toggle_ts_server()
+    end, { desc = "Toggle between TypeScript LSP servers" })
+
+
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
