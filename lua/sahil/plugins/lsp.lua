@@ -68,6 +68,8 @@ return {
         "elixirls",
         "clangd",
         "tailwindcss",
+        "jsonls",
+        "gopls",
       },
       handlers = {
         function(server_name) -- default handler (optional)

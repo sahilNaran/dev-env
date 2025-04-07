@@ -44,11 +44,10 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down centered" }) -- Sc
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up centered" })   -- Scroll up half-page with center keep
 
 -- Search navigation improvements
-vim.keymap.set("n", "n", "nzzzv", { desc = "Next centered match" })                               -- Next search result centered with fold open
-vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev centered match" })                               -- Previous search result centered with fold open
+vim.keymap.set("n", "n", "nzzzv", { desc = "Next centered match" })                            -- Next search result centered with fold open
+vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev centered match" })                            -- Previous search result centered with fold open
 
-vim.keymap.set("n", "<leader>zm", ":ZenMode<CR>", { silent = true, desc = "Toggle Zen Mode" })    -- Toggle Zen Mode
-vim.keymap.set("n", "<leader>tt", ":ToggleTerm<CR>", { silent = true, desc = "Toggle terminal" }) -- Toggle terminal
+vim.keymap.set("n", "<leader>zm", ":ZenMode<CR>", { silent = true, desc = "Toggle Zen Mode" }) -- Toggle Zen Mode
 
 
 -- Toggle TS LSP server

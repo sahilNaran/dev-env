@@ -8,7 +8,9 @@ return {
         "elixir",
         "javascript",
         "typescript",
-        "cpp"
+        "cpp",
+        "json",
+        "go",
       },
       sync_install = false,
       auto_install = true,
