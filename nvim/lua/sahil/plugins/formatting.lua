@@ -15,6 +15,8 @@ return {
         heex = { "mix" },
         elixir = { "mix" },
         cpp = { "clang_format" },
+        dart = { "dart_format" },
+        swift = { "swift_format" },
       },
       format_on_save = {
         timeout_ms = 500,

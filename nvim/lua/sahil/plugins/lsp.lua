@@ -72,39 +72,112 @@ return {
         "gopls",
         'templ',
       },
-      handlers = {
-        function(server_name) -- default handler (optional)
-          if server_name == "tsserver" and ts_toggle.use_tsgo() then
-            vim.notify("Using tsgo LSP", vim.log.levels.INFO)
-            return
-          end
-          require("lspconfig")[server_name].setup {
-            capabilities = capabilities
-          }
-        end,
-        ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup {
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                runtime = { version = "Lua 5.1" },
-                diagnostics = {
-                  globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                }
-              }
-            }
-          }
-        end,
-      }
     })
 
+    -- Configure LSP servers using new vim.lsp.config API
+    local servers = {
+      lua_ls = {
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            runtime = { version = "Lua 5.1" },
+            diagnostics = {
+              globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+            }
+          }
+        }
+      },
+      sourcekit = {
+        capabilities = capabilities,
+        cmd = { "sourcekit-lsp" },
+        filetypes = { "swift", "objective-c", "objective-cpp" },
+      },
+      ts_ls = {
+        capabilities = capabilities,
+      },
+      elixirls = {
+        capabilities = capabilities,
+      },
+      clangd = {
+        capabilities = capabilities,
+      },
+      tailwindcss = {
+        capabilities = capabilities,
+      },
+      jsonls = {
+        capabilities = capabilities,
+      },
+      gopls = {
+        capabilities = capabilities,
+      },
+      templ = {
+        capabilities = capabilities,
+      },
+    }
+
+    -- Setup servers with new API
+    for server_name, config in pairs(servers) do
+      -- Skip ts_ls if using tsgo
+      if not (server_name == "ts_ls" and ts_toggle.use_tsgo()) then
+        vim.lsp.config(server_name, config)
+      end
+    end
+
+    local dartExcludedFolders = {
+      vim.fn.expand("$HOME/AppData/Local/Pub/Cache"),
+      vim.fn.expand("$HOME/.pub-cache"),
+      vim.fn.expand("/opt/homebrew/"),
+      vim.fn.expand("$HOME/developement/flutter/"),
+    }
+
+    -- Configure Dart LSP
+    vim.lsp.config.dartls = {
+      capabilities = capabilities,
+      cmd = {
+        "dart",
+        "language-server",
+        "--protocol=lsp",
+      },
+      filetypes = { "dart" },
+      init_options = {
+        onlyAnalyzeProjectsWithOpenFiles = false,
+        suggestFromUnimportedLibraries = true,
+        closingLabels = true,
+        outline = false,
+        flutterOutline = false,
+      },
+      settings = {
+        dart = {
+          analysisExcludedFolders = dartExcludedFolders,
+          updateImportsOnRename = true,
+          completeFunctionCalls = true,
+          showTodos = true,
+        },
+      }
+    }
+
+    -- Configure DCM LSP for Dart
+    vim.lsp.config.dcmls = {
+      capabilities = capabilities,
+      cmd = {
+        "dcm",
+        "start-server",
+      },
+      filetypes = { "dart", "yaml" },
+      settings = {
+        dart = {
+          analysisExcludedFolders = dartExcludedFolders,
+        },
+      },
+    }
+
+
+    -- Configure TypeScript-Go if enabled
     if ts_toggle.use_tsgo() then
-      local lspconfig = require("lspconfig")
-      lspconfig.tsserver.setup {
+      vim.lsp.config.tsserver = {
         cmd = { ts_toggle.tsgo_path, "lsp" },
         capabilities = capabilities,
-        root_dir = lspconfig.util.root_pattern("tsconfig.json", "jsconfig.json", "package.json"),
+        root_markers = { "tsconfig.json", "jsconfig.json", "package.json" },
         init_options = {
           preferences = {
             disableSuggestions = false,
