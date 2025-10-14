@@ -15,10 +15,6 @@ return {
       -- Lua
       lua = { "luacheck" },
 
-      -- C/C++
-      c = { "clangtidy" },
-      cpp = { "clangtidy" },
-
       -- Python (if you use it)
       python = { "pylint" },
 

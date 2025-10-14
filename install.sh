@@ -99,6 +99,84 @@ else
 fi
 echo ""
 
+# macOS-specific: Aerospace and SwiftBar setup
+if [ "$OS" = "Darwin" ]; then
+    echo "Aerospace & SwiftBar Setup (macOS only)"
+    echo "----------------------------------------"
+
+    # Setup aerospace
+    create_symlink "$SCRIPT_DIR/aerospace" "$CONFIG_DIR/aerospace" "aerospace"
+
+    # Setup swiftbar
+    create_symlink "$SCRIPT_DIR/swiftbar" "$CONFIG_DIR/swiftbar" "swiftbar"
+    echo ""
+
+    # Check if aerospace is installed
+    if ! command -v aerospace &> /dev/null; then
+        echo -e "${YELLOW}aerospace not found${NC}"
+        read -p "Install aerospace via brew? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Installing aerospace..."
+            brew install --cask nikitabobko/tap/aerospace
+            echo -e "${GREEN}aerospace installed${NC}"
+        else
+            echo "Skipped aerospace installation"
+        fi
+    else
+        echo -e "${GREEN}aerospace is already installed${NC}"
+    fi
+
+    # Check if SwiftBar is installed
+    if [ ! -d "/Applications/SwiftBar.app" ]; then
+        echo -e "${YELLOW}SwiftBar not found${NC}"
+        read -p "Install SwiftBar via brew? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Installing SwiftBar..."
+            brew install --cask swiftbar
+            echo -e "${GREEN}SwiftBar installed${NC}"
+        else
+            echo "Skipped SwiftBar installation"
+        fi
+    else
+        echo -e "${GREEN}SwiftBar is already installed${NC}"
+    fi
+
+    # Start services
+    echo ""
+    echo "Starting services..."
+    if command -v aerospace &> /dev/null; then
+        echo "Starting aerospace..."
+        # Aerospace starts automatically at login, but we can reload config
+        if pgrep -x "AeroSpace" > /dev/null; then
+            aerospace reload-config 2>/dev/null || echo "  Note: Launch aerospace manually if it's not running"
+        else
+            open -a "AeroSpace"
+        fi
+    fi
+
+    if [ -d "/Applications/SwiftBar.app" ]; then
+        echo "Starting SwiftBar..."
+        # Kill existing instance if running
+        killall SwiftBar 2>/dev/null || true
+        # Start SwiftBar with plugin directory
+        open -a SwiftBar
+        # Set plugin directory (SwiftBar will use ~/.config/swiftbar)
+        defaults write com.ameba.SwiftBar PluginDirectory "$CONFIG_DIR/swiftbar"
+    fi
+
+    echo ""
+    echo -e "${GREEN}Aerospace & SwiftBar setup complete!${NC}"
+    echo "  - Use Alt+h/j/k/l to move focus between windows"
+    echo "  - Use Alt+Shift+h/j/k/l to move windows"
+    echo "  - Use Alt+0-9 to switch workspaces"
+    echo "  - Use Alt+Shift+0-9 to move windows to workspaces"
+    echo "  - Use Alt+f to toggle fullscreen"
+    echo "  - SwiftBar shows workspace indicator in menu bar"
+    echo ""
+fi
+
 # Check OS-specific dependencies
 echo "System Dependencies"
 echo "-------------------"
@@ -126,6 +204,11 @@ echo ""
 echo "Next steps:"
 echo "  1. Launch nvim - plugins will auto-install (powered by lazy.nvim)"
 echo "  2. Launch tmux and press Ctrl-Space + I to install tmux plugins"
-echo "  3. Restart your shell to ensure all changes take effect"
+if [ "$OS" = "Darwin" ]; then
+    echo "  3. Aerospace and SwiftBar are running (check menu bar for workspace indicator)"
+    echo "  4. Restart your shell to ensure all changes take effect"
+else
+    echo "  3. Restart your shell to ensure all changes take effect"
+fi
 echo ""
 echo "For nvim LSP servers, run :Mason inside nvim"
