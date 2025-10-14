@@ -2,6 +2,30 @@ vim.g.mapleader = " "
 
 vim.opt.clipboard:append("unnamedplus")
 
+-- Smart quit: close buffer and show netrw, or quit nvim if in netrw
+vim.cmd([[
+  cnoreabbrev <expr> q getcmdtype() == ':' && getcmdline() == 'q' ? 'lua SmartQuit()' : 'q'
+]])
+
+function SmartQuit()
+  local buftype = vim.bo.buftype
+  local filetype = vim.bo.filetype
+
+  -- If in netrw, just quit
+  if filetype == 'netrw' then
+    vim.cmd('q')
+    return
+  end
+
+  -- If it's a normal file buffer, close it and open netrw
+  if buftype == '' then
+    vim.cmd('bd | Ex')
+  else
+    -- For special buffers (help, quickfix, etc.), just close them
+    vim.cmd('q')
+  end
+end
+
 vim.keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })                   -- split window vertically
 vim.keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })                 -- split window horizontally
 vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })                    -- make split windows equal width & height
@@ -14,20 +38,8 @@ vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab"
 vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
 
-vim.keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })                         -- toggle file explorer
-vim.keymap.set("n", "<leader>ef", "<cmd>NvimTreeFindFileToggle<CR>", { desc = "Toggle file explorer on current file" }) -- toggle file explorer on current file
-vim.keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" })                     -- collapse file explorer
-vim.keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" })                       -- refresh file explorer
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "NvimTree",
-  callback = function()
-    vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", { buffer = true })
-    vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", { buffer = true })
-    vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", { buffer = true })
-    vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", { buffer = true })
-  end
-})
+vim.keymap.set("n", "<leader>ee", "<cmd>Ex<CR>", { desc = "Open file explorer" })                         -- open file explorer (netrw)
+vim.keymap.set("n", "<leader>ef", "<cmd>Explore %:h<CR>", { desc = "Open file explorer on current file" }) -- open file explorer on current file directory
 
 vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>")
 vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>")
