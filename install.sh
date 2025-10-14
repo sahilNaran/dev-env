@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# Cross-platform dev-env installer for Mac and Linux
+# Sets up neovim and tmux configurations via symlinks
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$HOME/.config"
+
+echo -e "${GREEN}Dev Environment Installer${NC}"
+echo "======================================"
+
+# Detect OS
+OS="$(uname -s)"
+case "$OS" in
+    Darwin)
+        echo "Detected OS: macOS"
+        ;;
+    Linux)
+        echo "Detected OS: Linux"
+        ;;
+    *)
+        echo -e "${RED}Unsupported OS: $OS${NC}"
+        exit 1
+        ;;
+esac
+echo ""
+
+# Function to create symlink safely
+create_symlink() {
+    local source="$1"
+    local target="$2"
+    local name="$3"
+
+    echo -n "Setting up $name... "
+
+    # Check if target already exists
+    if [ -L "$target" ]; then
+        # It's a symlink - check if it points to the right place
+        current_target="$(readlink "$target")"
+        if [ "$current_target" = "$source" ]; then
+            echo -e "${GREEN}already linked correctly${NC}"
+            return 0
+        else
+            echo -e "${YELLOW}existing symlink found (points to $current_target)${NC}"
+            read -p "  Remove and relink? (y/n) " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                rm "$target"
+            else
+                echo "  Skipped"
+                return 1
+            fi
+        fi
+    elif [ -e "$target" ]; then
+        # It exists but is not a symlink - back it up
+        backup_path="${target}.backup.$(date +%Y%m%d_%H%M%S)"
+        echo -e "${YELLOW}existing config found${NC}"
+        echo "  Backing up to: $backup_path"
+        mv "$target" "$backup_path"
+    fi
+
+    # Create the symlink
+    ln -s "$source" "$target"
+    echo -e "${GREEN}linked successfully${NC}"
+}
+
+# Setup nvim
+echo "Neovim Configuration"
+echo "--------------------"
+create_symlink "$SCRIPT_DIR/nvim" "$CONFIG_DIR/nvim" "nvim"
+echo ""
+
+# Setup tmux
+echo "Tmux Configuration"
+echo "--------------------"
+create_symlink "$SCRIPT_DIR/tmux" "$CONFIG_DIR/tmux" "tmux"
+echo ""
+
+# Install TPM (Tmux Plugin Manager) if not present
+echo "Tmux Plugin Manager (TPM)"
+echo "-------------------------"
+TPM_DIR="$CONFIG_DIR/tmux/plugins/tpm"
+if [ -d "$TPM_DIR" ]; then
+    echo -e "${GREEN}TPM already installed${NC}"
+else
+    echo "Installing TPM..."
+    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+    echo -e "${GREEN}TPM installed${NC}"
+    echo -e "${YELLOW}Note: Launch tmux and press prefix + I (Ctrl-Space + Shift-I) to install plugins${NC}"
+fi
+echo ""
+
+# Check OS-specific dependencies
+echo "System Dependencies"
+echo "-------------------"
+case "$OS" in
+    Darwin)
+        echo -e "${GREEN}macOS: pbcopy/pbpaste available by default${NC}"
+        ;;
+    Linux)
+        if command -v xclip &> /dev/null; then
+            echo -e "${GREEN}xclip is installed${NC}"
+        else
+            echo -e "${YELLOW}xclip not found${NC}"
+            echo "  Install with: sudo pacman -S xclip  # Arch"
+            echo "               sudo apt install xclip  # Ubuntu/Debian"
+            echo "               sudo dnf install xclip  # Fedora"
+        fi
+        ;;
+esac
+echo ""
+
+# Final instructions
+echo "======================================"
+echo -e "${GREEN}Installation Complete!${NC}"
+echo ""
+echo "Next steps:"
+echo "  1. Launch nvim - plugins will auto-install (powered by lazy.nvim)"
+echo "  2. Launch tmux and press Ctrl-Space + I to install tmux plugins"
+echo "  3. Restart your shell to ensure all changes take effect"
+echo ""
+echo "For nvim LSP servers, run :Mason inside nvim"
