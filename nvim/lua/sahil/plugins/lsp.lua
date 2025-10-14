@@ -52,13 +52,6 @@ return {
       end,
     })
 
-    -- Diagnostic signs
-    local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-    end
-
     require("fidget").setup({})
     require("mason").setup()
     require("mason-lspconfig").setup({
@@ -98,9 +91,7 @@ return {
       elixirls = {
         capabilities = capabilities,
       },
-      clangd = {
-        capabilities = capabilities,
-      },
+      -- clangd configured via clangd_extensions in cpp-tools.lua
       tailwindcss = {
         capabilities = capabilities,
       },
@@ -215,8 +206,16 @@ return {
       })
     })
 
+    -- Diagnostic configuration (signs + float)
     vim.diagnostic.config({
-      -- update_in_insert = true,
+      signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = " ",
+          [vim.diagnostic.severity.WARN] = " ",
+          [vim.diagnostic.severity.HINT] = "󰠠 ",
+          [vim.diagnostic.severity.INFO] = " ",
+        },
+      },
       float = {
         focusable = false,
         style = "minimal",

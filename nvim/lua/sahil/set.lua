@@ -34,8 +34,15 @@ vim.opt.updatetime = 50       -- faster completion timeout
 vim.opt.isfname:append("@-@") -- recognize special chars in filenames
 
 -- Clipboard & Input
+-- Cross-platform clipboard configuration
+-- Mac (Darwin): Uses pbcopy/pbpaste automatically
+-- Linux: Requires xclip or xsel (install via: pacman -S xclip)
 vim.opt.clipboard:append("unnamedplus") -- system clipboard
 vim.opt.backspace = "indent,eol,start"  -- better backspace
+
+-- OS Detection (available as vim.loop.os_uname().sysname)
+-- Common values: "Darwin" (Mac), "Linux"
+local os = vim.loop.os_uname().sysname
 
 -- Window Splitting
 vim.opt.splitright = true -- vertical splits to right
