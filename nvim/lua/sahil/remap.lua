@@ -2,30 +2,6 @@ vim.g.mapleader = " "
 
 vim.opt.clipboard:append("unnamedplus")
 
--- Smart quit: close buffer and show netrw, or quit nvim if in netrw
-vim.cmd([[
-  cnoreabbrev <expr> q getcmdtype() == ':' && getcmdline() == 'q' ? 'lua SmartQuit()' : 'q'
-]])
-
-function SmartQuit()
-  local buftype = vim.bo.buftype
-  local filetype = vim.bo.filetype
-
-  -- If in netrw, just quit
-  if filetype == 'netrw' then
-    vim.cmd('q')
-    return
-  end
-
-  -- If it's a normal file buffer, close it and open netrw
-  if buftype == '' then
-    vim.cmd('bd | Ex')
-  else
-    -- For special buffers (help, quickfix, etc.), just close them
-    vim.cmd('q')
-  end
-end
-
 vim.keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })                   -- split window vertically
 vim.keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })                 -- split window horizontally
 vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })                    -- make split windows equal width & height
