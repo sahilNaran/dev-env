@@ -39,8 +39,8 @@ outer.right =      12
 3 = 'main'
 4 = 'main'
 5 = 'main'
-6 = 'main'
-7 = 'main'
+6 = '27E6QC'
+7 = 'DELL P2422H'
 8 = 'main'
 9 = 'main'
 
@@ -155,10 +155,15 @@ run = 'move-node-to-workspace 2'
 if.app-id = 'com.microsoft.Outlook'
 run = 'move-node-to-workspace 3'
 
-# Amazon Workspaces → workspace 4
+# Slack → workspace 4
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 4'
+
+# Amazon Workspaces → workspace 5
 [[on-window-detected]]
 if.app-id = 'com.amazon.workspaces'
-run = 'move-node-to-workspace 4'
+run = 'move-node-to-workspace 5'
 
 # WhatsApp → workspace 8
 [[on-window-detected]]
