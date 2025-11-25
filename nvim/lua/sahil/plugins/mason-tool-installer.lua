@@ -7,7 +7,7 @@ return {
         -- Linters
         "eslint_d",      -- JS/TS linter
         "luacheck",      -- Lua linter
-        "pylint",        -- Python linter (if you use Python)
+        "pylint",        -- Python linter
         "golangci-lint", -- Go linter (if you use Go)
         -- Note: clang-tidy is typically system-installed, not via Mason
 
@@ -15,6 +15,7 @@ return {
         "stylua",        -- Lua formatter
         "prettier",      -- JS/TS/JSON/etc formatter
         "clang-format",  -- C++ formatter
+        "ruff",          -- Python formatter and linter
       },
       auto_update = false,
       run_on_start = true,

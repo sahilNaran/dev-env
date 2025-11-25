@@ -11,6 +11,7 @@ return {
         "cpp",
         "json",
         "go",
+        "python",
       },
       sync_install = false,
       auto_install = true,

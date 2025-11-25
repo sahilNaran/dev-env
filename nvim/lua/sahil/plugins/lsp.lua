@@ -64,6 +64,7 @@ return {
         "jsonls",
         "gopls",
         'templ',
+        "pyright",
       },
     })
 
@@ -103,6 +104,18 @@ return {
       },
       templ = {
         capabilities = capabilities,
+      },
+      pyright = {
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = "workspace",
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
       },
     }
 

@@ -17,6 +17,7 @@ return {
         cpp = { "clang_format" },
         dart = { "dart_format" },
         swift = { "swift_format" },
+        python = { "ruff_format", "ruff_fix" },
       },
       format_on_save = {
         timeout_ms = 500,
