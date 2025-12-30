@@ -105,6 +105,12 @@ alt-comma = 'layout accordion horizontal vertical'
 # Reload config
 alt-shift-c = 'reload-config'
 
+# Summon Finder to current workspace (floating)
+alt-e = '''exec-and-forget ws=$(aerospace list-workspaces --focused) && open -a Finder && sleep 0.1 && aerospace move-node-to-workspace $ws'''
+
+# Close all Finder windows
+alt-shift-e = '''exec-and-forget osascript -e 'tell application "Finder" to close every window' '''
+
 # Resize mode keybindings
 [mode.resize.binding]
 h = 'resize width -50'

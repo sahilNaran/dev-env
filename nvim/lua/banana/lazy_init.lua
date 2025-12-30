@@ -12,6 +12,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  spec = "sahil.plugins",
+  spec = "banana.plugins",
   change_detection = { notify = false }
 })
