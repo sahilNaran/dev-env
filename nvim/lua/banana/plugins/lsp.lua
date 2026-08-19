@@ -38,10 +38,22 @@ return {
 
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(ev)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf })
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf })
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = ev.buf })
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf })
+        local opts = function(desc) return { buffer = ev.buf, desc = desc } end
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts("Go to implementation"))
+        vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", opts("Find references"))
+        vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, opts("Go to type definition"))
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover docs"))
+        vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts("Signature help"))
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts("Rename symbol"))
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Code action"))
+        vim.keymap.set("n", "<leader>cf", function() vim.lsp.buf.format({ async = true }) end, opts("Format buffer"))
+        vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, opts("Show diagnostic"))
+        vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, opts("Prev diagnostic"))
+        vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, opts("Next diagnostic"))
+        vim.keymap.set("n", "<leader>cs", "<cmd>Telescope lsp_document_symbols<cr>", opts("Document symbols"))
+        vim.keymap.set("n", "<leader>cS", "<cmd>Telescope lsp_workspace_symbols<cr>", opts("Workspace symbols"))
       end,
     })
 

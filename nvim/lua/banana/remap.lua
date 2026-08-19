@@ -14,3 +14,8 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Smart join lines" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down centered" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up centered" })
+
+vim.keymap.set("n", "<leader>tw", function()
+  vim.opt_local.wrap = not vim.opt_local.wrap:get()
+  vim.notify("Wrap " .. (vim.opt_local.wrap:get() and "on" or "off"))
+end, { desc = "Toggle text wrap" })

@@ -6,3 +6,6 @@
 !install.sh
 !/aerospace/
 !/swiftbar/
+
+# TPM-managed tmux plugins (cloned by install.sh + `prefix + I`, never committed)
+/tmux/plugins/

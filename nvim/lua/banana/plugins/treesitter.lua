@@ -13,6 +13,8 @@ return {
 				"typescript",
 				"json",
 				"python",
+				"markdown",
+				"markdown_inline",
 			},
 		})
 	end,
